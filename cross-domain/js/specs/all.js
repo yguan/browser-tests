@@ -1,7 +1,6 @@
 define([
-	'chai',
-	'jquery',
-	'specs/dom'
-	], function (chai) {
-	chai.should();
+    'chai',
+    'specs/simple-test'
+], function (chai) {
+    chai.should();
 });

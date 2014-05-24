@@ -4,6 +4,10 @@
 define(['exports'], function (exports) {
     'use strict';
 
+    function executeFn(fn) {
+        return typeof(fn) === "string" ? eval(fn) : fn();
+    }
+
     /**
      * Wait until the test condition is true or a timeout occurs. Useful for waiting
      * on a server response or for a ui change (fadeIn, etc.) to occur.
@@ -31,13 +35,9 @@ define(['exports'], function (exports) {
                     } else {
                         // Condition fulfilled (timeout and/or condition is 'true')
                         executeFn(onReady); //< Do what it's supposed to do once the condition is fulfilled
-                        clearInterval(interval); //< Stop this interval
                     }
+                    clearInterval(interval); //< Stop this interval
                 }
             }, 100); //< repeat check every 250ms
     }
-
-    function executeFn(fn) {
-        return typeof(fn) === "string" ? eval(fn) : fn();
-    }
-}());
+});

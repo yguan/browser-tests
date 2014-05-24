@@ -3,7 +3,7 @@
 
 define([
     'exports',
-    'lib/async-cahin',
+    'lib/async-chain',
     'lib/wait'
 ], function (exports, asyncChain, wait) {
     'use strict';
@@ -20,22 +20,28 @@ define([
         }, timeOutMillis)
     }
 
-    function elementExist(selector) {
-        return $(selector).length > 0;
+    function elementExist(selector, win) {
+        if (win.$) {
+            return win.$(selector).length > 0;
+        }
+        return false;
     }
 
     function Browser() {
         this.chain = asyncChain.create();
         this.popups = [];
-        this.currentWindow;
+        this._currentWindow;
     }
 
+    Browser.prototype._getCurrentWindow = function () {
+        return this._currentWindow;
+    }
     Browser.prototype.openWindow = function (url) {
         var me = this;
         me.chain.add(function (next) {
             var win = window.open(url, 'win', windowFeatures);
             me.popups.push(win);
-            me.currentWindow = win;
+            me._currentWindow = win;
             win[addEventListenerMethod]('load', function () {
                 next();
             });
@@ -49,16 +55,19 @@ define([
 
         me.chain.add(function (next) {
             waitFor(function () {
-                return elementExist(selector);
+                return elementExist(selector, me._getCurrentWindow());
             }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist)
         });
 
         return me;
     };
     Browser.prototype.call = function (fn) {
-        this.add(function () {
-            fn();
+        var me = this;
+        me.chain.add(function (next) {
+            fn(me._getCurrentWindow(), next);
         });
+
+        return me;
     };
     Browser.prototype.end = function () {
         this.chain.run();

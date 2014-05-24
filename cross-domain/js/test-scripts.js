@@ -1,7 +1,7 @@
 
-window.testConfig = {
-    testScriptUrl: 'http://localhost:8000/' // change it to the site that hosts the scripts
-};
+//window.testConfig = {
+//    testScriptUrl: 'http://localhost:8000/' // change it to the site that hosts the scripts
+//};
 
 (function () {
 

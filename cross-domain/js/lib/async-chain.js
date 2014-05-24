@@ -4,6 +4,13 @@
 define(['exports'], function (exports) {
     'use strict';
 
+    // get the wrap idea from http://lennybacon.com/post/2011/10/03/chainingasynchronousjavascriptcalls
+    function wrap(fn, next) {
+        return function () {
+            fn(next);
+        };
+    }
+
     function AsyncCahin() {
         this.methods = [];
     }
@@ -13,20 +20,17 @@ define(['exports'], function (exports) {
     };
     AsyncCahin.prototype.run = function () {
         var me = this,
-            len = me.methods.length,
-            i = len - 1;
+            endIndex = me.methods.length - 1,
+            i = endIndex;
 
         while (i > -1) {
-            if (i === 0) {
-                me.methods[i]();
-                return;
-            }
-
-            // i > 0
-            me.methods[i].call(this, me.methods[i - 1]);
+            me.methods[i] = wrap(me.methods[i], i === endIndex ? null : me.methods[i + 1]);
+            i = i - 1;
         }
 
-        this.methods = []; // clear methods
+        me.methods[0]();
+
+        me.methods = []; // clear methods
     };
 
     exports.create = function () {

@@ -1,5 +1,6 @@
 
 requirejs.config({
+//    urlArgs: "bust=" + (new Date()).getTime(), // only use for development
 	//appDir: 'tests',
     //baseUrl: 'js/lib',
     paths: {
@@ -8,7 +9,7 @@ requirejs.config({
 		/* the dependencies below belong to tests*/
 		mocha: 'js/lib/mocha',
 		chai: 'js/lib/chai',
-		jquery: 'js/lib/jquery-1.8.3.min',
+		jquery: 'js/lib/jquery',
 		specs: 'js/specs'
     },
 
