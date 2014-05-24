@@ -5,7 +5,7 @@
     requirejs.load = function (context, moduleId, url) {
         //modify url here, then call original load
         var relativeUrl = url.indexOf('./') === 0 ? url.substring(1) : url,
-            urlWithScheme = window.testConfig.testScriptUrl + relativeUrl;
+            urlWithScheme = window.testScriptUrl + relativeUrl;
 
         return load(context, moduleId, urlWithScheme);
     };
