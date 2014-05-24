@@ -16,6 +16,10 @@ var config = {
             'javascriptEnabled': true
         }
     },
+    testScriptServer: {
+        port: 9000,
+        appDir: 'C:\Users\coding\Documents\GitHub\browser-tests\cross-domain'
+    },
     testSiteUrl: 'http://www.jquery.com/',
     testScriptUrl: 'http://localhost:8000/'
 };

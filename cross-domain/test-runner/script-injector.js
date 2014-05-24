@@ -6,7 +6,6 @@
 // http://www.nczonline.net/blog/2009/07/28/the-best-way-to-load-external-javascript/
 
 var injectScript = function (testScriptUrl) {
-    'use strict';
 
     function loadFile(fileRef, callback) {
         if (fileRef.readyState) {  //IE
@@ -52,9 +51,6 @@ var injectScript = function (testScriptUrl) {
 
 module.exports = {
     getScript: function (testScriptUrl) {
-        var fn = function () {
-            injectScript(testScriptUrl);
-        };
-        return fn.toString();
+        return injectScript.toString() + injectScript + '(' + testScriptUrl + ');';
     }
 };

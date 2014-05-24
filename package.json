@@ -1,22 +1,22 @@
 {
-    "name": "browser-test",
-    "version": "0.0.1",
-
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/yguan/browser-tests.git"
-    },
-
-    "description": "demo for writing end to end tests that run in browser",
-    "author": "Yong Guan",
-
-    "dependencies": {
-
-    },
-    "devDependencies": {
-    },
-    "engines": {
-        "node": ">=0.10.0"
-    },
-    "license": "MIT"
+  "name": "browser-test",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yguan/browser-tests.git"
+  },
+  "description": "demo for writing end to end tests that run in browser",
+  "author": "Yong Guan",
+  "dependencies": {
+    "wd": "0.2.21",
+    "selenium-standalone": "2.41.0-2.9.0-1",
+    "connect": "2.17.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.6.2"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "license": "MIT"
 }
