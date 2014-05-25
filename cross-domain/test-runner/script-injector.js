@@ -5,7 +5,7 @@
 // http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
 // http://www.nczonline.net/blog/2009/07/28/the-best-way-to-load-external-javascript/
 
-var injectScript = function (testScriptUrl) {
+var injectScript = function injectScript(testScriptUrl) {
 
     function loadFile(fileRef, callback) {
         if (fileRef.readyState) {  //IE
@@ -47,10 +47,12 @@ var injectScript = function (testScriptUrl) {
     });
 };
 
-// to run in the browser directly, call injectScript('http://localhost:8000/');
+// injectScript('http://localhost:9000/');
+
+// to run in the browser directly, call injectScript('http://localhost:9000/');
 
 module.exports = {
     getScript: function (testScriptUrl) {
-        return injectScript.toString() + injectScript + '(' + testScriptUrl + ');';
+        return injectScript.toString() + ';injectScript("' + testScriptUrl + '");';
     }
 };

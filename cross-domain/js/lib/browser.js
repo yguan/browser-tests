@@ -11,7 +11,7 @@ define([
     var windowFeatures = 'menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes',
         addEventListenerMethod = window.addEventListener ? 'addEventListener' : 'attachEvent',
         timeoutInMs = {
-            elementExist: 5000
+            elementExist: 10000
         };
 
     function waitFor(testFx, onReady, timeoutMessage, timeOutMillis) {
@@ -49,6 +49,18 @@ define([
 
         return me;
     };
+    Browser.prototype.waitFor = function (testFn, timeoutInMilliseconds) {
+        var me = this,
+            timeoutMessage = 'waitFor condition timeout';
+
+        me.chain.add(function (next) {
+            waitFor(function () {
+                return testFn(me._getCurrentWindow());
+            }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist)
+        });
+
+        return me;
+    };
     Browser.prototype.waitForElementExist = function (selector, timeoutInMilliseconds) {
         var me = this,
             timeoutMessage = 'waitForElementExist timeout for ' + selector;
@@ -61,7 +73,7 @@ define([
 
         return me;
     };
-    Browser.prototype.call = function (fn) {
+    Browser.prototype.execute = function (fn) {
         var me = this;
         me.chain.add(function (next) {
             fn(me._getCurrentWindow(), next);

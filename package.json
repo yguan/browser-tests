@@ -13,7 +13,6 @@
     "connect": "2.17.1"
   },
   "devDependencies": {
-    "gulp": "^3.6.2"
   },
   "engines": {
     "node": ">=0.10.0"
