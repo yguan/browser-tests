@@ -20,9 +20,20 @@ define([
         }, timeOutMillis)
     }
 
-    function elementExist(selector, win) {
+    function selectElement(selector, win) {
         if (win.$) {
-            return win.$(selector).length > 0;
+            return win.$(selector);
+        }
+        if (win.Ext) {
+            return win.Ext.get(selector);
+        }
+        return null;
+    }
+
+    function elementExist(selector, win) {
+        var element = selectElement(selector, win);
+        if (element) {
+            return true;
         }
         return false;
     }
@@ -68,7 +79,21 @@ define([
         me.chain.add(function (next) {
             waitFor(function () {
                 return elementExist(selector, me._getCurrentWindow());
-            }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist)
+            }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist);
+        });
+
+        return me;
+    };
+    Browser.prototype.selectElement = function (selector, onElementFound) {
+        var me = this,
+            timeoutMessage = 'waitForElementExist timeout for ' + selector;
+
+        me.chain.add(function (next) {
+            waitFor(function () {
+                return elementExist(selector, me._getCurrentWindow());
+            }, function () {
+                onElementFound(selectElement(selector, me._getCurrentWindow()), next);
+            }, timeoutMessage, timeoutInMs.elementExist);
         });
 
         return me;

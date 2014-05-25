@@ -4,6 +4,8 @@
 define(['exports'], function (exports) {
     'use strict';
 
+    var defaultCheckIntervalInMs = 100;
+
     function executeFn(fn) {
         return typeof(fn) === "string" ? eval(fn) : fn();
     }
@@ -38,6 +40,6 @@ define(['exports'], function (exports) {
                     }
                     clearInterval(interval); //< Stop this interval
                 }
-            }, 100); //< repeat check every 250ms
+            }, defaultCheckIntervalInMs); //< repeat check
     }
 });

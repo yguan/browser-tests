@@ -7,9 +7,15 @@ define(['lib/browser'], function (Browser) {
         it('should type some text to the search box', function (done) {
             this.timeout(timeoutMaxInMs);
 
+            var searchBoxSelector = '.searchform :input';
+
             browser
                 .openWindow('http://jquery.com/')
-                .waitForElementExist('.searchform :input')
+                .waitForElementExist(searchBoxSelector) // this is optional
+                .selectElement(searchBoxSelector, function (searchBox, next) {
+                    searchBox.val().should.equal('');
+                    next();
+                })
                 .execute(function (win, next) {
                     var searchBox = win.$('.searchform :input'),
                         textToType = 'ajax';
