@@ -10,7 +10,9 @@ var config = {
         url: 'http://localhost:9000/',
         appDir: 'C:\\Users\\coding\\Documents\\GitHub\\browser-tests\\cross-domain\\'
     },
-    testSiteUrl: 'http://www.jquery.com/'
+    jquerySiteUrl: 'http://www.jquery.com/',
+    extjsSiteUrl: 'http://docs.sencha.com/extjs/4.2.2/',
+    runExtjsTests: false
 };
 
 module.exports = config;

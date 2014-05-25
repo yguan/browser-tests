@@ -31,7 +31,8 @@ function runTests(config) {
     var browser = wd.promiseChainRemote();
     browser
         .init(config.webdriver.capabilities)
-        .get(config.testSiteUrl)
+        .get(config.runExtjsTests ? config.extjsSiteUrl : config.jquerySiteUrl)
+        .safeExecute('window.runExtjsTests=' + config.runExtjsTests)
         .safeExecute(scriptInjector.getScript(config.testScriptServer.url), function (err, res) {
         })
         .fin(function () {
