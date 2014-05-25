@@ -1,8 +1,10 @@
 (function () {
     describe('fake site', function () {
         it('should modified result div html', function (done) {
+            var fakeSiteUrl = window.location.href.replace('index.html', '') + 'fake-site.html';
+
             browser
-                .openWindow('http://localhost:9000/fake-site.html')
+                .openWindow(fakeSiteUrl)
                 .then(function (win) {
                     win.waitFor(function () {
                         return win.windowRef.$;
