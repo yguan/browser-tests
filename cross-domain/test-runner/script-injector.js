@@ -47,9 +47,9 @@ var injectScript = function injectScript(testScriptUrl) {
     });
 };
 
+// to run in the browser directly, uncomment the lines below
+// window.runExtjsTests = true;
 // injectScript('http://localhost:9000/');
-
-// to run in the browser directly, call injectScript('http://localhost:9000/');
 
 module.exports = {
     getScript: function (testScriptUrl) {
