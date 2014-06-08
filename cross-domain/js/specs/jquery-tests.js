@@ -13,9 +13,8 @@ define(['exports', 'lib/browser'], function (exports, Browser) {
                 browser
                     .openWindow('http://jquery.com/')
                     .waitForElementExist(searchBoxSelector) // this is optional
-                    .selectElement(searchBoxSelector, function (searchBox, next) {
+                    .selectElement(searchBoxSelector, function (searchBox) {
                         searchBox.val().should.equal('');
-                        next();
                     })
                     .execute(function (win, next) {
                         var searchBox = win.$('.searchform :input'),

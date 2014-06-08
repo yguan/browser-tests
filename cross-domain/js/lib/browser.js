@@ -20,6 +20,9 @@ define([
         }, timeOutMillis)
     }
 
+    /*
+     * Change this function to have use different query
+     */
     function selectElement(selector, win) {
         if (win.$) {
             return win.$(selector);
@@ -40,19 +43,17 @@ define([
 
     function Browser() {
         this.chain = asyncChain.create();
-        this.popups = [];
-        this._currentWindow;
+        this.currentWindow;
     }
 
-    Browser.prototype._getCurrentWindow = function () {
-        return this._currentWindow;
+    Browser.prototype.getCurrentWindow = function () {
+        return this.currentWindow;
     }
     Browser.prototype.openWindow = function (url) {
         var me = this;
         me.chain.add(function (next) {
             var win = window.open(url, 'win', windowFeatures);
-            me.popups.push(win);
-            me._currentWindow = win;
+            me.currentWindow = win;
             win[addEventListenerMethod]('load', function () {
                 next();
             });
@@ -66,7 +67,7 @@ define([
 
         me.chain.add(function (next) {
             waitFor(function () {
-                return testFn(me._getCurrentWindow());
+                return testFn(me.getCurrentWindow());
             }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist)
         });
 
@@ -78,7 +79,7 @@ define([
 
         me.chain.add(function (next) {
             waitFor(function () {
-                return elementExist(selector, me._getCurrentWindow());
+                return elementExist(selector, me.getCurrentWindow());
             }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist);
         });
 
@@ -90,9 +91,12 @@ define([
 
         me.chain.add(function (next) {
             waitFor(function () {
-                return elementExist(selector, me._getCurrentWindow());
+                return elementExist(selector, me.getCurrentWindow());
             }, function () {
-                onElementFound(selectElement(selector, me._getCurrentWindow()), next);
+                onElementFound(selectElement(selector, me.getCurrentWindow()));
+                if (next) {
+                    next();
+                }
             }, timeoutMessage, timeoutInMs.elementExist);
         });
 
@@ -101,7 +105,7 @@ define([
     Browser.prototype.execute = function (fn) {
         var me = this;
         me.chain.add(function (next) {
-            fn(me._getCurrentWindow(), next);
+            fn(me.getCurrentWindow(), next);
         });
 
         return me;

@@ -10,10 +10,9 @@ define(['exports', 'lib/browser'], function (exports, Browser) {
 
                 browser
                     .openWindow('http://docs.sencha.com/extjs/4.2.2/')
-                    .selectElement('doctabs', function (doctabs, next) {
+                    .selectElement('doctabs', function (doctabs) {
                         var overviewTab = doctabs.down('.doctab.overview.classes');
                         overviewTab.dom.click();
-                        next();
                     })
                     .execute(function (win, next) {
                         win.location.hash.should.equal('#!/api');
