@@ -10,9 +10,7 @@ define([
 
     var windowFeatures = 'menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes',
         addEventListenerMethod = window.addEventListener ? 'addEventListener' : 'attachEvent',
-        timeoutInMs = {
-            elementExist: 10000
-        };
+        browser;
 
     function waitFor(testFx, onReady, timeoutMessage, timeOutMillis) {
         wait.waitFor(testFx, onReady, function () {
@@ -42,13 +40,21 @@ define([
     }
 
     function Browser() {
-        this.chain = asyncChain.create();
-        this.currentWindow;
     }
 
     Browser.prototype = {
-        getCurrentWindow: function () {
-            return this.currentWindow;
+        init: function (config) {
+            var me = this;
+
+            config = config || {};
+
+            me.chain = config.chain || asyncChain.create();
+
+            me.defaultTimeoutInMs = config.defaultTimeoutInMs || {
+                elementExist: 1000,
+                implicitWait: 100
+            };
+            return me;
         },
         openWindow: function (url) {
             var me = this;
@@ -68,8 +74,8 @@ define([
 
             me.chain.add(function (next) {
                 waitFor(function () {
-                    return testFn(me.getCurrentWindow());
-                }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist)
+                    return testFn(me.currentWindow);
+                }, next, timeoutMessage, timeoutInMilliseconds || me.defaultTimeoutInMs.elementExist)
             });
 
             return me;
@@ -80,25 +86,25 @@ define([
 
             me.chain.add(function (next) {
                 waitFor(function () {
-                    return elementExist(selector, me.getCurrentWindow());
-                }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist);
+                    return elementExist(selector, me.currentWindow);
+                }, next, timeoutMessage, timeoutInMilliseconds || me.defaultTimeoutInMs.elementExist);
             });
 
             return me;
         },
-        selectElement: function (selector, onElementFound) {
+        waitAndSelectElement: function (selector, onElementFound) {
             var me = this,
                 timeoutMessage = 'waitForElementExist timeout for ' + selector;
 
             me.chain.add(function (next) {
                 waitFor(function () {
-                    return elementExist(selector, me.getCurrentWindow());
+                    return elementExist(selector, me.currentWindow);
                 }, function () {
-                    onElementFound(selectElement(selector, me.getCurrentWindow()));
+                    onElementFound(selectElement(selector, me.currentWindow));
                     if (next) {
                         next();
                     }
-                }, timeoutMessage, timeoutInMs.elementExist);
+                }, timeoutMessage, me.defaultTimeoutInMs.elementExist);
             });
 
             return me;
@@ -106,17 +112,34 @@ define([
         execute: function (fn) {
             var me = this;
             me.chain.add(function (next) {
-                fn(me.getCurrentWindow(), next);
+                fn(me.currentWindow, next);
             });
 
             return me;
         },
         end: function () {
             this.chain.run();
+        },
+        getIframe: function (iframeSelector) {
+            var me = this,
+                iframe = new Browser();
+
+            iframe.init({
+                chain: me.chain
+            });
+
+            me.waitAndSelectElement(iframeSelector, function (iframeElement) {
+                iframe.currentWindow = iframeElement[0].contentWindow;
+            });
+
+            return iframe;
         }
     };
 
     exports.getInstance = function () {
-        return new Browser();
+        if (!browser) {
+            browser = new Browser();
+        }
+        return browser;
     }
 });

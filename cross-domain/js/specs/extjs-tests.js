@@ -1,6 +1,5 @@
-define(['exports', 'lib/browser'], function (exports, Browser) {
-    var browser = Browser.getInstance(),
-        timeoutMaxInMs = 10000;
+define(['exports'], function (exports, Browser) {
+    var timeoutMaxInMs = 10000;
 
     function createTests() {
         describe('Ext JS API site', function () {
@@ -10,7 +9,7 @@ define(['exports', 'lib/browser'], function (exports, Browser) {
 
                 browser
                     .openWindow('http://docs.sencha.com/extjs/4.2.2/')
-                    .selectElement('doctabs', function (doctabs) {
+                    .waitAndSelectElement('doctabs', function (doctabs) {
                         var overviewTab = doctabs.down('.doctab.overview.classes');
                         overviewTab.dom.click();
                     })
