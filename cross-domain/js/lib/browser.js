@@ -46,72 +46,74 @@ define([
         this.currentWindow;
     }
 
-    Browser.prototype.getCurrentWindow = function () {
-        return this.currentWindow;
-    }
-    Browser.prototype.openWindow = function (url) {
-        var me = this;
-        me.chain.add(function (next) {
-            var win = window.open(url, 'win', windowFeatures);
-            me.currentWindow = win;
-            win[addEventListenerMethod]('load', function () {
-                next();
-            });
-        });
-
-        return me;
-    };
-    Browser.prototype.waitFor = function (testFn, timeoutInMilliseconds) {
-        var me = this,
-            timeoutMessage = 'waitFor condition timeout';
-
-        me.chain.add(function (next) {
-            waitFor(function () {
-                return testFn(me.getCurrentWindow());
-            }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist)
-        });
-
-        return me;
-    };
-    Browser.prototype.waitForElementExist = function (selector, timeoutInMilliseconds) {
-        var me = this,
-            timeoutMessage = 'waitForElementExist timeout for ' + selector;
-
-        me.chain.add(function (next) {
-            waitFor(function () {
-                return elementExist(selector, me.getCurrentWindow());
-            }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist);
-        });
-
-        return me;
-    };
-    Browser.prototype.selectElement = function (selector, onElementFound) {
-        var me = this,
-            timeoutMessage = 'waitForElementExist timeout for ' + selector;
-
-        me.chain.add(function (next) {
-            waitFor(function () {
-                return elementExist(selector, me.getCurrentWindow());
-            }, function () {
-                onElementFound(selectElement(selector, me.getCurrentWindow()));
-                if (next) {
+    Browser.prototype = {
+        getCurrentWindow: function () {
+            return this.currentWindow;
+        },
+        openWindow: function (url) {
+            var me = this;
+            me.chain.add(function (next) {
+                var win = window.open(url, 'win', windowFeatures);
+                me.currentWindow = win;
+                win[addEventListenerMethod]('load', function () {
                     next();
-                }
-            }, timeoutMessage, timeoutInMs.elementExist);
-        });
+                });
+            });
 
-        return me;
-    };
-    Browser.prototype.execute = function (fn) {
-        var me = this;
-        me.chain.add(function (next) {
-            fn(me.getCurrentWindow(), next);
-        });
+            return me;
+        },
+        waitFor: function (testFn, timeoutInMilliseconds) {
+            var me = this,
+                timeoutMessage = 'waitFor condition timeout';
 
-        return me;
-    };
-    Browser.prototype.end = function () {
-        this.chain.run();
+            me.chain.add(function (next) {
+                waitFor(function () {
+                    return testFn(me.getCurrentWindow());
+                }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist)
+            });
+
+            return me;
+        },
+        waitForElementExist: function (selector, timeoutInMilliseconds) {
+            var me = this,
+                timeoutMessage = 'waitForElementExist timeout for ' + selector;
+
+            me.chain.add(function (next) {
+                waitFor(function () {
+                    return elementExist(selector, me.getCurrentWindow());
+                }, next, timeoutMessage, timeoutInMilliseconds || timeoutInMs.elementExist);
+            });
+
+            return me;
+        },
+        selectElement: function (selector, onElementFound) {
+            var me = this,
+                timeoutMessage = 'waitForElementExist timeout for ' + selector;
+
+            me.chain.add(function (next) {
+                waitFor(function () {
+                    return elementExist(selector, me.getCurrentWindow());
+                }, function () {
+                    onElementFound(selectElement(selector, me.getCurrentWindow()));
+                    if (next) {
+                        next();
+                    }
+                }, timeoutMessage, timeoutInMs.elementExist);
+            });
+
+            return me;
+        },
+        execute: function (fn) {
+            var me = this;
+            me.chain.add(function (next) {
+                fn(me.getCurrentWindow(), next);
+            });
+
+            return me;
+        },
+        end: function () {
+            this.chain.run();
+        }
     };
 
     exports.getInstance = function () {
