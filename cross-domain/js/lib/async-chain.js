@@ -11,14 +11,14 @@ define(['exports'], function (exports) {
         };
     }
 
-    function AsyncCahin() {
+    function AsyncChain() {
         this.methods = [];
     }
 
-    AsyncCahin.prototype.add = function (fn) {
+    AsyncChain.prototype.add = function (fn) {
         this.methods.push(fn);
     };
-    AsyncCahin.prototype.run = function () {
+    AsyncChain.prototype.run = function () {
         var me = this,
             endIndex = me.methods.length - 1,
             i = endIndex;
@@ -34,6 +34,6 @@ define(['exports'], function (exports) {
     };
 
     exports.create = function () {
-        return new AsyncCahin();
+        return new AsyncChain();
     };
 });
